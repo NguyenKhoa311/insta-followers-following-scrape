@@ -1,4 +1,4 @@
-# 📱 Instagram Followers/Following Data Extractor
+# 📱 Instagram Followers/Following Data Scraper
 
 A Python script that helps you extract and save data about your(friends) Instagram followers and following lists using browser automation and network request interception.
 
