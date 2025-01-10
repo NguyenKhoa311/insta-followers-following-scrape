@@ -63,7 +63,7 @@ async def process_response(response, captured_requests, client):
             all_following.extend(users)  # add to all_following
 
         except Exception as e:
-            print(f"Lỗi khi lấy response body: {e}")
+            print(f"Error when response body: {e}")
 
     elif "followers/?count=12" in request_url:
         print(f"Captured Request (Followers): {request_url}")
@@ -80,7 +80,7 @@ async def process_response(response, captured_requests, client):
             all_followers.extend(users)  # add to all_followers
 
         except Exception as e:
-            print(f"Lỗi khi lấy response body: {e}")
+            print(f"Error when get response body: {e}")
 
 
 async def wait_for_browser_close(browser):
