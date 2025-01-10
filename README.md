@@ -31,7 +31,7 @@ python scraper.py
 
 3. Log in to your Instagram account manually when prompted.
 
-4. Navigate to your profile and open your followers/following lists.
+4. Navigate to your profile and open followers/following lists.
 
 5. Scroll through the lists to load all data.
 
