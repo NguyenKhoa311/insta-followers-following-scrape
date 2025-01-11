@@ -22,20 +22,25 @@ pip install pyppeteer asyncio
 
 ## 🚀 Usage
 
-1. Run the script:
+1. Clone the project
+```bash
+git clone https://github.com/NguyenKhoa311/insta-followers-following-scrape
+```
+
+2. Run the script:
 ```bash
 python scraper.py
 ```
 
-2. A browser window will open automatically with Instagram's login page.
+3. A browser window will open automatically with Instagram's login page.
 
-3. Log in to your Instagram account manually when prompted.
+4. Log in to your Instagram account manually when prompted.
 
-4. Navigate to your profile and open followers/following lists.
+5. Navigate to your profile and open followers/following lists.
 
-5. Scroll through the lists to load all data.
+6. Scroll through the lists to load all data.
 
-6. Close the browser window when you're done to process the collected data.
+7. Close the browser window when you're done to process the collected data.
 
 ## 📂 Output Files
 
