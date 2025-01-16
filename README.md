@@ -4,8 +4,7 @@ A Python script that helps you extract and save data about your(friends) Instagr
 
 ## ✨ Features
 
-- 🔄 Automatically captures Instagram followers and following data
-- 💾 Saves raw data in JSON format
+- 🔄 Call API for fetching followers, following list
 - 📄 Exports usernames to formatted text files
 
 ## 📋 Prerequisites
@@ -34,37 +33,20 @@ python scraper.py
 
 3. A browser window will open automatically with Instagram's login page.
 
-4. Log in to your Instagram account manually when prompted.
+4. Log in to your Instagram account manually when prompted. Once the login is successful, the browser will close automatically.
 
-5. Navigate to your profile and open followers/following lists.
+5. Enter the username of the Instagram account you want to scrape in the terminal.
 
-6. Scroll through the lists to load all data.
-
-7. Close the browser window when you're done to process the collected data.
+6. Enter your own Instagram account credentials in the terminal to fetch data.
 
 ## 📂 Output Files
 
 The script generates four output files:
 
-1. `following_response_body.json`: Raw JSON data of all following accounts
-2. `followers_response_body.json`: Raw JSON data of all followers accounts
-3. `following_usernames.txt`: Formatted list of usernames you follow
-4. `followers_usernames.txt`: Formatted list of usernames following you
+1. `following_usernames.txt`: Formatted list of usernames you follow
+2. `followers_usernames.txt`: Formatted list of usernames following you
 
 ## 📊 File Format
-
-### 📝 JSON Files
-The JSON files contain detailed information about each user in the following format:
-```json
-{
-    "users": [
-        {
-            "username": "example_user",
-            ...other user data
-        }
-    ]
-}
-```
 
 ### 📜 Text Files
 The text files contain numbered lists of usernames:
@@ -79,7 +61,6 @@ The text files contain numbered lists of usernames:
 - Requires manual login
 - Depends on Instagram's web interface
 - Network request patterns may change if Instagram updates their API
-- Browser must remain open during data collection
 
 ## 🤝 Contributing
 

@@ -242,14 +242,6 @@ def get_following(user_id, cookie, csrf_token, following_count):
         print(f"An error occurred: {e}")
         return None
 
-async def wait_for_browser_close(browser):
-    # Listen on closing browser event
-    while True:
-        pages = await browser.pages()
-        if not pages:
-            break
-        await asyncio.sleep(1)  # Recheck after 1s
-
 # Run program
 if __name__ == '__main__':
     asyncio.get_event_loop().run_until_complete(get_session_and_csrf_token())
