@@ -58,9 +58,9 @@ The text files contain numbered lists of usernames:
 ```
 
 ## ⚡ Limitations
-
 - Requires manual login
 - Depends on Instagram's web interface
+- Fetching the followers list may take time due to the possibility of duplicate usernames in the response.
 - Network request patterns may change if Instagram updates their API
 
 ## 🤝 Contributing
