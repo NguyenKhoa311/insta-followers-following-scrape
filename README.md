@@ -13,11 +13,7 @@ To run this script, you need to have the following installed:
 - Python 3.7+
 - pyppeteer
 - asyncio
-
-Install the required packages using pip:
-```bash
-pip install pyppeteer asyncio
-```
+- instaloader
 
 ## 🚀 Usage
 
@@ -26,18 +22,23 @@ pip install pyppeteer asyncio
 git clone https://github.com/NguyenKhoa311/insta-followers-following-scrape
 ```
 
-2. Run the script:
+2. Install the required packages using pip:
+```bash
+pip install -r lib.txt
+```
+
+3. Run the script:
 ```bash
 python scraper.py
 ```
 
-3. A browser window will open automatically with Instagram's login page.
+4. A browser window will open automatically with Instagram's login page.
 
-4. Log in to your Instagram account manually when prompted. Once the login is successful, the browser will close automatically.
+5. Log in to your Instagram account manually when prompted. Once the login is successful, the browser will close automatically.
 
-5. Enter the username of the Instagram account you want to scrape in the terminal.
+6. Enter the username of the Instagram account you want to scrape in the terminal.
 
-6. Enter your own Instagram account credentials in the terminal to fetch data.
+7. Enter your own Instagram account credentials in the terminal to fetch data.
 
 ## 📂 Output Files
 
