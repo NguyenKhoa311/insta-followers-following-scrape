@@ -77,6 +77,7 @@ async def get_session_and_csrf_token():
                 
                 # Get info of target account
                 user_id = user_info['user_id']
+                followers_count = user_info['followers']
                 following_count = user_info['following']
                 break  # Exit the loop if user info is fetched successfully
         except instaloader.exceptions.LoginRequiredException:
@@ -90,7 +91,7 @@ async def get_session_and_csrf_token():
         
         print("Please try again.")
 
-    all_followers = get_followers(user_id, cookies_str, csrf_token)
+    all_followers = get_followers(user_id, cookies_str, csrf_token, followers_count)
     all_following = get_following(user_id, cookies_str, csrf_token, following_count)
 
     # Write data to txt file
@@ -144,8 +145,7 @@ def get_user_info(username):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def get_followers(user_id, cookie, csrf_token, max_retries=3, timeout=10):
-    all_usernames = []
+def get_followers(user_id, cookie, csrf_token, followers_count, max_retries=3, timeout=10):
     next_max_id = None  # start with no pagination
     url = f'https://www.instagram.com/api/v1/friendships/{user_id}/followers/?count=12&search_surface=follow_list_page'
     headers = {
@@ -158,56 +158,62 @@ def get_followers(user_id, cookie, csrf_token, max_retries=3, timeout=10):
         'x-requested-with': 'XMLHttpRequest'
     }
     unique_usernames = set()
-    while True:
-        try:
-            # if next_max_id is not None, add it to the URL
-            paginated_url = f"{url}&max_id={next_max_id}" if next_max_id else url
-            print("Request URL:", paginated_url)
-            retries = 0
-            while retries < max_retries:
-                try:
-                    # Call API
-                    response = requests.get(paginated_url, headers=headers, timeout=timeout)
-                    
-                    # Check HTTP status code
-                    if response.status_code == 200:
-                        print("Request successful!")
-                        
-                        # Parse JSON response
-                        data = response.json()
-                        
-                        # Get usernames
-                        usernames = [user.get("username") for user in data.get("users", [])]
-                        all_usernames.extend(usernames)
-                        
-                        # Check if there is more data to fetch
-                        next_max_id = data.get("next_max_id")
-                        
-                        # If there is no more data, return the list of usernames
-                        if not next_max_id:
-                            unique_usernames.update(all_usernames)
-                            all_usernames = list(unique_usernames)
-                            return sorted(all_usernames)  # return sorted list of usernames
-                        break
-                    else:
-                        print(f"Request failed with status code {response.status_code}")
-                        print("Response text:", response.text)
-                        return None
-                except requests.exceptions.ReadTimeout:
-                    retries += 1
-                    print(f"Read timeout occurred. Retrying {retries}/{max_retries}...")
-                    time.sleep(2)  # wait for 2 seconds before retrying
-                except requests.exceptions.RequestException as e:
-                    print(f"Request error: {e}")
-                    return None
+    retries = 0
 
-            if retries == max_retries:
-                print("Max retries reached. Exiting.")
+    while len(unique_usernames) < followers_count:
+        next_max_id = None  # Reset pagination to start over
+        while True:
+            try:
+                # Construct paginated URL
+                paginated_url = f"{url}&max_id={next_max_id}" if next_max_id else url
+                print("Request URL:", paginated_url)
+                
+                # Make API request
+                response = requests.get(paginated_url, headers=headers, timeout=timeout)
+                
+                if response.status_code == 200:
+                    print("Request successful!")
+                    
+                    # Parse JSON response
+                    data = response.json()
+                    
+                    # Get usernames and add to the unique set
+                    usernames = [user.get("username") for user in data.get("users", [])]
+                    unique_usernames.update(usernames)
+                    
+                    # Print progress
+                    print(f"Fetched {len(unique_usernames)} unique usernames so far.")
+                    
+                    # Check if we have enough followers
+                    if len(unique_usernames) >= followers_count:
+                        return list(sorted(unique_usernames))  # Return sorted list of usernames
+                    
+                    # Get next pagination ID
+                    next_max_id = data.get("next_max_id")
+                    
+                    # If no more pages, break to restart from the beginning
+                    if not next_max_id:
+                        print("Reached the last page, restarting...")
+                        break
+                else:
+                    print(f"Request failed with status code {response.status_code}")
+                    print("Response text:", response.text)
+                    return None
+            except requests.exceptions.ReadTimeout:
+                retries += 1
+                if retries >= max_retries:
+                    print("Max retries reached. Exiting.")
+                    return None
+                print(f"Read timeout occurred. Retrying {retries}/{max_retries}...")
+                time.sleep(2)  # Wait before retrying
+            except requests.exceptions.RequestException as e:
+                print(f"Request error: {e}")
+                return None
+            except Exception as e:
+                print(f"An error occurred: {e}")
                 return None
 
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return None
+    return list(sorted(unique_usernames))
 
 def get_following(user_id, cookie, csrf_token, following_count):
     url = f'https://www.instagram.com/api/v1/friendships/{user_id}/following/?count={following_count}'
