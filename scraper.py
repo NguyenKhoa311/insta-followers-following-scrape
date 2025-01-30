@@ -6,10 +6,13 @@ import time
 
 all_following = []
 all_followers = []
-FOLLOWING_USERNAME_TXT = "following_usernames.txt"
-FOLLOWERS_USERNAME_TXT = "followers_usernames.txt"
+friends = []
+FOLLOWING_USERNAME_TXT = "_following_usernames.txt"
+FOLLOWERS_USERNAME_TXT = "_followers_usernames.txt"
+FRIENDS_TXT = "friends.txt"
 
 async def get_session_and_csrf_token():
+    global all_followers, all_following, friends
     # Open browser
     browser = await launch(headless=False, args=['--auto-open-devtools-for-tabs'])
     page = await browser.newPage()
@@ -91,12 +94,19 @@ async def get_session_and_csrf_token():
         
         print("Please try again.")
 
+    if all_followers is None:
+        all_followers = []
+    if all_following is None:
+        all_following = []
+
     all_followers = get_followers(user_id, cookies_str, csrf_token, followers_count)
     all_following = get_following(user_id, cookies_str, csrf_token, following_count)
+    friends = list(set(all_followers) & set(all_following))
 
     # Write data to txt file
-    extract_username_to_txt(all_followers, FOLLOWERS_USERNAME_TXT)
-    extract_username_to_txt(all_following, FOLLOWING_USERNAME_TXT)
+    extract_username_to_txt(all_followers, username + FOLLOWERS_USERNAME_TXT)
+    extract_username_to_txt(all_following, username + FOLLOWING_USERNAME_TXT)
+    extract_username_to_txt(friends, username + FRIENDS_TXT)
 
 def extract_username_to_txt(usernames, output_txt_file):
     try:
@@ -145,7 +155,7 @@ def get_user_info(username):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-def get_followers(user_id, cookie, csrf_token, followers_count, max_retries=3, timeout=10):
+def get_followers(user_id, cookie, csrf_token, followers_count, max_retries=10, timeout=10):
     next_max_id = None  # start with no pagination
     url = f'https://www.instagram.com/api/v1/friendships/{user_id}/followers/?count=12&search_surface=follow_list_page'
     headers = {
@@ -250,4 +260,4 @@ def get_following(user_id, cookie, csrf_token, following_count):
 
 # Run program
 if __name__ == '__main__':
-    asyncio.get_event_loop().run_until_complete(get_session_and_csrf_token())
+    asyncio.run(get_session_and_csrf_token())
